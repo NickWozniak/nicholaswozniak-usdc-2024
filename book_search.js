@@ -26,10 +26,6 @@
         "Results": []
     };
 
-    if(Object.keys(scannedTextObj).length === 0){
-        return result
-    }
-
     // Search through texts
     for(const text of scannedTextObj){
         // Search through content
@@ -257,7 +253,7 @@ if (JSON.stringify(twoBooksOut) === JSON.stringify(test3result)) {
 }
 
 /** Work on empty input */
-const test4result = findSearchTermInBooks("the", {});
+const test4result = findSearchTermInBooks("the", []);
 if (JSON.stringify(emptyResponse) === JSON.stringify(test4result)) {
     console.log("PASS: Test 4");
 } else {
