@@ -21,11 +21,28 @@
  function findSearchTermInBooks(searchTerm, scannedTextObj) {
     /** You will need to implement your search and 
      * return the appropriate object here. */
-
     var result = {
-        "SearchTerm": "",
+        "SearchTerm": searchTerm,
         "Results": []
     };
+
+    if(Object.keys(scannedTextObj).length === 0){
+        return result
+    }
+
+    // Search through texts
+    for(const text of scannedTextObj){
+        // Search through content
+        for(const content of text.Content){
+            if (content.Text.includes(searchTerm)){
+                result.Results.push({
+                    "ISBN": text.ISBN,
+                    "Page": content.Page,
+                    "Line": content.Line
+                })
+            }
+        }
+    }
     
     return result; 
 }
@@ -54,6 +71,127 @@ const twentyLeaguesIn = [
         ] 
     }
 ]
+
+const twoBooks = [
+    {
+        "Title": "Twenty Thousand Leagues Under the Sea",
+        "ISBN": "9780000528531",
+        "Content": [
+            {
+                "Page": 31,
+                "Line": 8,
+                "Text": "now simply went on by her own momentum.  The dark-"
+            },
+            {
+                "Page": 31,
+                "Line": 9,
+                "Text": "ness was then profound; and however good the Canadian\'s"
+            },
+            {
+                "Page": 31,
+                "Line": 10,
+                "Text": "eyes were, I asked myself how he had managed to see, and"
+            } 
+        ] 
+    },
+    {
+        "Title": "The Road Not Taken",
+        "ISBN": "9980000528531",
+        "Content": [
+            {
+                "Page": 1,
+                "Line": 1,
+                "Text": "Two roads diverged in a yellow wood,"
+            },
+            {
+                "Page": 1,
+                "Line": 2,
+                "Text": "And sorry I could not travel both"
+            },
+            {
+                "Page": 1,
+                "Line": 3,
+                "Text": "And be one traveler, long I stood"
+            },
+            {
+                "Page": 1,
+                "Line": 7,
+                "Text": "And having perhaps the better claim,"
+            }
+        ] 
+    }
+]
+
+const twoBooksNoContent = [
+    {
+        "Title": "Twenty Thousand Leagues Under the Sea",
+        "ISBN": "9780000528531",
+        "Content": [] 
+    },
+    {
+        "Title": "The Road Not Taken",
+        "ISBN": "9980000528531",
+        "Content": [
+            {
+                "Page": 1,
+                "Line": 1,
+                "Text": "Two roads diverged in a yellow wood,"
+            },
+            {
+                "Page": 1,
+                "Line": 2,
+                "Text": "And sorry I could not travel both"
+            },
+            {
+                "Page": 1,
+                "Line": 3,
+                "Text": "And be one traveler, long I stood"
+            },
+            {
+                "Page": 1,
+                "Line": 7,
+                "Text": "And having perhaps the better claim,"
+            }
+        ] 
+    }
+]
+
+const twoBooksOutNoContent = {
+    "SearchTerm": "I",
+    "Results": [
+        {
+            "ISBN": "9980000528531",
+            "Page": 1,
+            "Line": 2
+        },
+        {
+            "ISBN": "9980000528531",
+            "Page": 1,
+            "Line": 3
+        }
+    ]
+}
+
+const twoBooksOut = {
+    "SearchTerm": "I",
+    "Results": [
+        {
+            "ISBN": "9780000528531",
+            "Page": 31,
+            "Line": 10
+        },
+        {
+            "ISBN": "9980000528531",
+            "Page": 1,
+            "Line": 2
+        },
+        {
+            "ISBN": "9980000528531",
+            "Page": 1,
+            "Line": 3
+        }
+    ]
+}
     
 /** Example output object */
 const twentyLeaguesOut = {
@@ -65,6 +203,11 @@ const twentyLeaguesOut = {
             "Line": 9
         }
     ]
+}
+
+const emptyResponse = {
+    "SearchTerm": "the",
+    "Results": []
 }
 
 /*
@@ -101,4 +244,34 @@ if (test2result.Results.length == 1) {
     console.log("FAIL: Test 2");
     console.log("Expected:", twentyLeaguesOut.Results.length);
     console.log("Received:", test2result.Results.length);
+}
+
+/** Find results from two separate books */
+const test3result = findSearchTermInBooks("I", twoBooks);
+if (JSON.stringify(twoBooksOut) === JSON.stringify(test3result)) {
+    console.log("PASS: Test 3");
+} else {
+    console.log("FAIL: Test 3");
+    console.log("Expected:", twoBooksOut);
+    console.log("Received:", test3result);
+}
+
+/** Work on empty input */
+const test4result = findSearchTermInBooks("the", {});
+if (JSON.stringify(emptyResponse) === JSON.stringify(test4result)) {
+    console.log("PASS: Test 4");
+} else {
+    console.log("FAIL: Test 4");
+    console.log("Expected:", emptyResponse);
+    console.log("Received:", test4result);
+}
+
+/** Work when one book has no content */
+const test5result = findSearchTermInBooks("I", twoBooksNoContent);
+if (JSON.stringify(twoBooksOutNoContent) === JSON.stringify(test5result)) {
+    console.log("PASS: Test 5");
+} else {
+    console.log("FAIL: Test 5");
+    console.log("Expected:", twoBooksOutNoContent);
+    console.log("Received:", test5result);
 }
