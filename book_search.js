@@ -117,6 +117,13 @@ const twoBooks = [
         ] 
     }
 ]
+const noContent = [
+    {
+        "Title": "Twenty Thousand Leagues Under the Sea",
+        "ISBN": "9780000528531",
+        "Content": [] 
+    }
+]
 
 const twoBooksNoContent = [
     {
@@ -185,6 +192,17 @@ const twoBooksOut = {
             "ISBN": "9980000528531",
             "Page": 1,
             "Line": 3
+        }
+    ]
+}
+
+const twentyLeaguesOutCapital = {
+    "SearchTerm": "The",
+    "Results": [
+        {
+            "ISBN": "9780000528531",
+            "Page": 31,
+            "Line": 8
         }
     ]
 }
@@ -263,11 +281,31 @@ if (JSON.stringify(emptyResponse) === JSON.stringify(test4result)) {
 }
 
 /** Work when one book has no content */
-const test5result = findSearchTermInBooks("I", twoBooksNoContent);
-if (JSON.stringify(twoBooksOutNoContent) === JSON.stringify(test5result)) {
+const test5result = findSearchTermInBooks("the", noContent);
+if (JSON.stringify(emptyResponse) === JSON.stringify(test5result)) {
     console.log("PASS: Test 5");
 } else {
     console.log("FAIL: Test 5");
-    console.log("Expected:", twoBooksOutNoContent);
+    console.log("Expected:", emptyResponse);
     console.log("Received:", test5result);
+}
+
+/** Work when one book has no content */
+const test6result = findSearchTermInBooks("I", twoBooksNoContent);
+if (JSON.stringify(twoBooksOutNoContent) === JSON.stringify(test6result)) {
+    console.log("PASS: Test 6");
+} else {
+    console.log("FAIL: Test 6");
+    console.log("Expected:", twoBooksOutNoContent);
+    console.log("Received:", test6result);
+}
+
+/** Work with capitalization */
+const test7result = findSearchTermInBooks("The", twentyLeaguesIn); 
+if (JSON.stringify(twentyLeaguesOutCapital) === JSON.stringify(test7result)) {
+    console.log("PASS: Test 7");
+} else {
+    console.log("FAIL: Test 7");
+    console.log("Expected:", twentyLeaguesOutCapital.Results.length);
+    console.log("Received:", test7result.Results.length);
 }
